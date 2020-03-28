@@ -16,11 +16,18 @@ var sequence = [];
 
 var sequenceIndex = 0;
 var gameIterationTimeout;
+var started = false;
 
 $(document).on("keydown", startGame);
+$("#level-title").on("click", startGame);
 
 function startGame() {
+    if (started) {
+        return;
+    }
+    started = true;
     $(document).off();
+    $("#level-title").off();
     registerButtons();
     performGameIteration();
 }
@@ -63,6 +70,7 @@ function clickButton(button, playerClick = false) {
 function setGameOver() {
     clearTimeout(gameIterationTimeout);
     deregisterButtons();
+    started = false;
     sequence = [];
     wrongSound.play();
     $("body").addClass("game-over");
@@ -71,15 +79,13 @@ function setGameOver() {
     }, 200);
     $("#level-title").text("Game Over, Press Any Key to Restart");
     $(document).on("keydown", startGame);
+    $("#level-title").on("click", startGame);
 }
 
 function registerButtons() {
     greenButton.button.addEventListener("click", greenButtonClick);
-
     redButton.button.addEventListener("click", redButtonClick);
-
     yellowButton.button.addEventListener("click", yellowButtonClick);
-
     blueButton.button.addEventListener("click", blueButtonClick);
 }
 
